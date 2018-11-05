@@ -7,10 +7,6 @@
 #    http://shiny.rstudio.com/
 #
 
-library(shiny)
-library(htmltools)
-
-
 # Define server logic required to draw a map
 shinyServer(function(input, output) {
     stormData_state <- reactive({

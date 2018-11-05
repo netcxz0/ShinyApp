@@ -1,4 +1,8 @@
+library(shiny)
 library(leaflet)
+library(dplyr)
+
+options(shiny.maxRequestSize=30*1024^2)
 
 prod <- function(dmgexp) {
     if (dmgexp %in% c("h", "H")) return(100)
@@ -12,12 +16,12 @@ prod <- function(dmgexp) {
 #load storm data once when application loaded
 selectCol <- c("COUNTYNAME", "STATE", "EVTYPE", "FATALITIES", "INJURIES", "PROPDMGCOST", "CROPDMGCOST")
 
-stormData <- read.csv("stormData.csv.bz2", na.strings = "", comment.char = "#")
+stormData <- read.csv("data/stormData.csv", na.strings = "", comment.char = "#")
 stormData$PROPDMGCOST <- stormData$PROPDMG * sapply(stormData$PROPDMGEXP, prod)
 stormData$CROPDMGCOST <- stormData$CROPDMG * sapply(stormData$CROPDMGEXP, prod)
 
 #load geocodes data 
-geocodes <- read.csv("Geocodes_USA_with_Counties.csv", header = TRUE)
+geocodes <- read.csv("data/Geocodes_USA_with_Counties.csv", header = TRUE)
 
 #select relevant columns only
 stormData <- stormData[stormData$FATALITIES > 0 | stormData$INJURIES > 0 | stormData$PROPDMGCOST > 0 | stormData$CROPDMGCOST > 0, selectCol]
